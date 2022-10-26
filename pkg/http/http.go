@@ -10,6 +10,7 @@ import (
 
 type Handlers interface {
 	HandleAlbum(c *gin.Context)
+	HandleArtist(c *gin.Context)
 }
 
 type handlers struct {
@@ -36,5 +37,22 @@ func (h handlers) HandleAlbum(c *gin.Context) {
 		}
 
 		c.JSON(200, album)
+	}
+}
+
+func (h handlers) HandleArtist(c *gin.Context) {
+	id := c.Query("id")
+	if id != "" {
+		i, err := strconv.Atoi(id)
+		if err != nil {
+			panic(err)
+		}
+
+		artist, err := h.services.Artist.Get(i)
+		if err != nil {
+			panic(err)
+		}
+
+		c.JSON(200, artist)
 	}
 }

@@ -3,6 +3,8 @@ package service
 import (
 	"database/sql"
 
+	"github.com/ReneKroon/ttlcache"
+
 	"api/pkg/entity"
 	"api/pkg/service/internal/repository"
 )
@@ -11,9 +13,9 @@ type Album interface {
 	Get(id int) (*entity.Album, error)
 }
 
-func NewAlbum(db *sql.DB) Album {
+func NewAlbum(db *sql.DB, cache *ttlcache.Cache) Album {
 	return album{
-		albumRepository: repository.NewAlbum(db),
+		albumRepository: repository.NewAlbum(db, cache),
 	}
 }
 

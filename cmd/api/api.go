@@ -1,6 +1,9 @@
 package main
 
 import (
+	"time"
+
+	"github.com/ReneKroon/ttlcache"
 	"github.com/gin-gonic/gin"
 
 	"api/pkg/http"
@@ -18,10 +21,14 @@ func main() {
 	})
 
 	db := sql.NewDBConnection("./pkg/service/internal/repository/db/chinook.db")
-	services := service.GetAll(db.DB)
+	cache := ttlcache.NewCache()
+	cache.SetTTL(time.Hour)
+
+	services := service.GetAll(db.DB, cache)
 	handlers := http.NewHandlers(services)
 
 	r.GET("/album", handlers.HandleAlbum)
+	r.GET("/artist", handlers.HandleArtist)
 
 	r.Run()
 }

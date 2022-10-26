@@ -1,13 +1,19 @@
 package service
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/ReneKroon/ttlcache"
+)
 
 type All struct {
-	Album Album
+	Album  Album
+	Artist Artist
 }
 
-func GetAll(db *sql.DB) All {
+func GetAll(db *sql.DB, cache *ttlcache.Cache) All {
 	return All{
-		Album: NewAlbum(db),
+		Album:  NewAlbum(db, cache),
+		Artist: NewArtist(db, cache),
 	}
 }
